@@ -2,6 +2,20 @@ class Subject < ActiveRecord::Base
 	
 	has_many :pages
 
+	has_secure_password
+
+	validates_presence_of :name
+	validates_length_of :name, :maximum =>255
+
+	SUBJECTS_NOT_ALLOWED = ['delbel', 'rafael', 'fernando']
+	validate :subjects_is_allowed
+
+     def subjects_is_allowed
+     	if SUBJECTS_NOT_ALLOWED.include?(name)
+     		errors.add(:name, "has been restricted from use")
+     	end
+     end
+
 	scope :visible, lambda {
 	     where(:visible => true)
 	}
